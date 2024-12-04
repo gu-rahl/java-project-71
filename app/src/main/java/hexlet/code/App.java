@@ -3,6 +3,7 @@ package hexlet.code;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 @Command(
         name = "gendiff",
@@ -12,11 +13,18 @@ import picocli.CommandLine.Option;
 )
 public class App implements Runnable {
 
-    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Show this help message and exit.")
-    private boolean help;
+    @Option(
+            names = {"-f", "--format"},
+            description = "output format [default: stylish]",
+            defaultValue = "stylish"
+    )
+    private String format;
 
-    @Option(names = {"-V", "--version"}, versionHelp = true, description = "Print version information and exit.")
-    private boolean version;
+    @Parameters(index = "0", description = "path to first file")
+    private String filepath1;
+
+    @Parameters(index = "1", description = "path to second file")
+    private String filepath2;
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
@@ -25,6 +33,11 @@ public class App implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Welcome to gendiff!");
+        System.out.printf(
+                "Comparing files: %s and %s with format: %s%n",
+                filepath1,
+                filepath2,
+                format
+        );
     }
 }
