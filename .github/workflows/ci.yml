@@ -19,8 +19,12 @@ jobs:
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
-        distribution: 'corretto'
+        distribution: 'temurin'
         java-version: '21'
+
+    - name: Ensure Gradle Wrapper is executable
+      run: chmod +x ./gradlew
+      working-directory: app
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v3
@@ -32,16 +36,26 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew clean build
+      working-directory: app
 
     - name: Run JUnit tests
       run: ./gradlew test
+      working-directory: app
 
     - name: Run Checkstyle
       run: ./gradlew check
+      working-directory: app
 
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: build/test-results/test/
+        path: app/build/test-results/test/
+
+    - name: Upload Checkstyle Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: checkstyle-report
+        path: app/build/reports/checkstyle/
