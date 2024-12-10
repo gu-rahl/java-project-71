@@ -15,7 +15,11 @@ class DifferTest {
         Map<String, Object> map1 = parse("src/test/resources/nested1.json");
         Map<String, Object> map2 = parse("src/test/resources/nested2.json");
 
+        assert map1 != null : "map1 is null";
+        assert map2 != null : "map2 is null";
+
         var diff = Differ.generate(map1, map2);
+
         String expected = """
                 {
                     chars1: [a, b, c]
