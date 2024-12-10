@@ -1,6 +1,8 @@
 package hexlet.code;
 
 public class DiffEntry {
+    public enum Status { ADDED, REMOVED, CHANGED, UNCHANGED }
+
     private final String key;
     private final Object oldValue;
     private final Object newValue;
@@ -27,12 +29,5 @@ public class DiffEntry {
 
     public Status getStatus() {
         return status;
-    }
-
-    public enum Status {
-        ADDED,
-        REMOVED,
-        CHANGED,
-        UNCHANGED
     }
 }

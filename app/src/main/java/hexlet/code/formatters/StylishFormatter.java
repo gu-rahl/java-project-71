@@ -10,34 +10,19 @@ public class StylishFormatter {
         StringBuilder result = new StringBuilder("{\n");
         for (DiffEntry entry : diff) {
             switch (entry.getStatus()) {
-                case ADDED -> result.append("  + ")
-                        .append(entry.getKey())
-                        .append(": ")
-                        .append(formatValue(entry.getNewValue()))
-                        .append("\n");
-                case REMOVED -> result.append("  - ")
-                        .append(entry.getKey())
-                        .append(": ")
-                        .append(formatValue(entry.getOldValue()))
-                        .append("\n");
+                case ADDED -> result.append("  + ").append(entry.getKey()).
+                        append(": ").append(formatValue(entry.getNewValue())).append("\n");
+                case REMOVED -> result.append("  - ").append(entry.getKey()).append(": ").
+                        append(formatValue(entry.getOldValue())).append("\n");
                 case CHANGED -> {
-                    result.append("  - ")
-                            .append(entry.getKey())
-                            .append(": ")
-                            .append(formatValue(entry.getOldValue()))
-                            .append("\n");
-                    result.append("  + ")
-                            .append(entry.getKey())
-                            .append(": ")
-                            .append(formatValue(entry.getNewValue()))
-                            .append("\n");
+                    result.append("  - ").append(entry.getKey()).append(": ").
+                            append(formatValue(entry.getOldValue())).append("\n");
+                    result.append("  + ").append(entry.getKey()).append(": ").
+                            append(formatValue(entry.getNewValue())).append("\n");
                 }
-                case UNCHANGED -> result.append("    ")
-                        .append(entry.getKey())
-                        .append(": ")
-                        .append(formatValue(entry.getOldValue()))
-                        .append("\n");
-                default -> throw new IllegalStateException("Unexpected value: " + entry.getStatus());
+                case UNCHANGED -> result.append("    ").append(entry.getKey()).append(": ").
+                        append(formatValue(entry.getOldValue())).append("\n");
+                default -> throw new IllegalStateException("Unexpected status: " + entry.getStatus());
             }
         }
         result.append("}");
@@ -45,6 +30,6 @@ public class StylishFormatter {
     }
 
     private static String formatValue(Object value) {
-        return value instanceof String ? value.toString() : String.valueOf(value);
+        return value instanceof String ? "\"" + value + "\"" : String.valueOf(value);
     }
 }
