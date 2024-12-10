@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.formatters.StylishFormatter;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -23,7 +24,7 @@ public class App implements Runnable {
         try {
             var diff = Differ.generate(filePath1, filePath2);
             // Форматер по умолчанию — stylish
-            String result = hexlet.code.StylishFormatter.format(diff);
+            String result = StylishFormatter.format(diff);
             System.out.println(result);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
