@@ -43,6 +43,9 @@ public class StylishFormatter {
                             .append(formatValue(entry.getOldValue()))
                             .append("\n");
                 }
+                default -> {
+                    // Добавляем default
+                }
             }
         }
         result.append("}");
