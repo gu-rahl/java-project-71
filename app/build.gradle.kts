@@ -16,6 +16,7 @@ dependencies {
     implementation("info.picocli:picocli:4.7.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
+    annotationProcessor("info.picocli:picocli-codegen:4.7.0") // Для аннотационного процессора
 }
 
 tasks.test {
@@ -36,4 +37,14 @@ tasks.withType<Checkstyle>().configureEach {
         xml.required.set(false)
         html.required.set(true) // Удобнее читать в HTML
     }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21)) // Указываем Java 21
+    }
+}
+
+tasks.withType<JavaCompile> {
+    options.annotationProcessorPath = configurations.annotationProcessor.get()
 }

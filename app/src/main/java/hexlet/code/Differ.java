@@ -1,55 +1,42 @@
 package hexlet.code;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Differ {
 
-    /**
-     * Сравнивает два файла и возвращает строку с различиями.
-     * @param filePath1 Путь к первому файлу.
-     * @param filePath2 Путь ко второму файлу.
-     * @return Различия между файлами в виде строки.
-     * @throws Exception Если возникла ошибка при обработке файлов.
-     */
-    public static String generate(String filePath1, String filePath2) throws Exception {
-        // Читаем содержимое файлов в виде карт
+    public static List<DiffEntry> generate(String filePath1, String filePath2) throws Exception {
         Map<String, Object> map1 = Parser.parse(filePath1);
         Map<String, Object> map2 = Parser.parse(filePath2);
+        return generate(map1, map2);
+    }
 
-        // Для хранения и сортировки результатов
-        Map<String, String> result = new TreeMap<>();
+    public static List<DiffEntry> generate(Map<String, Object> map1, Map<String, Object> map2) {
+        List<DiffEntry> diff = new ArrayList<>();
+        var allKeys = new TreeSet<>(map1.keySet());
+        allKeys.addAll(map2.keySet());
 
-        // Проверяем ключи из первого файла
-        for (String key : map1.keySet()) {
-            if (!map2.containsKey(key)) {
-                // Ключ есть только в первом файле
-                result.put("- " + key, String.valueOf(map1.get(key)));
-            } else if (!map1.get(key).equals(map2.get(key))) {
-                // Значение ключа изменилось
-                result.put("- " + key, String.valueOf(map1.get(key)));
-                result.put("+ " + key, String.valueOf(map2.get(key)));
-            } else {
-                // Значение ключа осталось таким же
-                result.put("  " + key, String.valueOf(map1.get(key)));
-            }
-        }
+        for (var key : allKeys) {
+            Object value1 = map1.get(key);
+            Object value2 = map2.get(key);
 
-        // Проверяем ключи, которые есть только во втором файле
-        for (String key : map2.keySet()) {
             if (!map1.containsKey(key)) {
-                result.put("+ " + key, String.valueOf(map2.get(key)));
+                // ключ добавлен
+                diff.add(new DiffEntry(key, null, value2, DiffEntry.Status.ADDED));
+            } else if (!map2.containsKey(key)) {
+                // ключ удалён
+                diff.add(new DiffEntry(key, value1, null, DiffEntry.Status.REMOVED));
+            } else if (!value1.equals(value2)) {
+                // значение изменено
+                diff.add(new DiffEntry(key, value1, value2, DiffEntry.Status.CHANGED));
+            } else {
+                // значение не изменилось
+                diff.add(new DiffEntry(key, value1, value2, DiffEntry.Status.UNCHANGED));
             }
         }
 
-        // Собираем результат в строку
-        StringBuilder diff = new StringBuilder("{\n");
-        for (var entry : result.entrySet()) {
-            diff.append("  ").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
-        diff.append("}");
-
-        // Возвращаем строку без лишних пробелов
-        return diff.toString().trim();
+        return diff;
     }
 }
