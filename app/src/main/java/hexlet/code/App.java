@@ -1,13 +1,12 @@
 package hexlet.code;
 
-import hexlet.code.formatters.StylishFormatter;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 @Command(name = "gendiff", mixinStandardHelpOptions = true, version = "gendiff 1.0",
         description = "Compares two configuration files and shows a difference.")
@@ -18,6 +17,9 @@ public class App implements Runnable {
 
     @Parameters(index = "1", description = "Path to the second file.")
     private String filePath2;
+
+    @Option(names = {"-f", "--format"}, description = "Output format: stylish (default), plain")
+    private String format = "stylish"; // Значение по умолчанию
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
@@ -36,20 +38,10 @@ public class App implements Runnable {
                 throw new IllegalArgumentException("One or both files do not exist.");
             }
 
-            // Парсим файлы в Map
-            Map<String, Object> map1 = Parser.parse(filePath1);
-            Map<String, Object> map2 = Parser.parse(filePath2);
-
-            // Проверяем, что файлы корректно распарсились
-            if (map1 == null || map2 == null) {
-                throw new IllegalArgumentException("Failed to parse one or both files.");
-            }
-
             // Генерируем различия
-            var diff = Differ.generate(map1, map2);
+            String result = Differ.generate(filePath1, filePath2, format);
 
-            // Форматируем результат
-            String result = StylishFormatter.format(diff);
+            // Вывод результата
             System.out.println("Comparison result:");
             System.out.println(result);
         } catch (Exception e) {
