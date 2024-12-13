@@ -16,11 +16,22 @@ dependencies {
     implementation("info.picocli:picocli:4.7.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
-    annotationProcessor("info.picocli:picocli-codegen:4.7.0") // Для аннотационного процессора
+    annotationProcessor("info.picocli:picocli-codegen:4.7.0")
 }
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs("--enable-preview") // Включение preview features для тестов
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("--enable-preview") // Включение preview features для компиляции
 }
 
 application {
@@ -35,16 +46,6 @@ checkstyle {
 tasks.withType<Checkstyle>().configureEach {
     reports {
         xml.required.set(false)
-        html.required.set(true) // Удобнее читать в HTML
+        html.required.set(true)
     }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21)) // Указываем Java 21
-    }
-}
-
-tasks.withType<JavaCompile> {
-    options.annotationProcessorPath = configurations.annotationProcessor.get()
 }

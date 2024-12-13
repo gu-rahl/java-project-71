@@ -10,13 +10,15 @@ import java.util.Map;
 public class Parser {
 
     public static Map<String, Object> parse(String filePath) throws Exception {
+        if (!Files.exists(Paths.get(filePath))) {
+            throw new IllegalArgumentException("Файл не найден: " + filePath);
+        }
+
         String content = Files.readString(Paths.get(filePath));
         ObjectMapper mapper = getMapper(filePath);
+
         @SuppressWarnings("unchecked")
         Map<String, Object> result = mapper.readValue(content, Map.class);
-        if (result == null) {
-            throw new IllegalArgumentException("Failed to parse file: " + filePath);
-        }
         return result;
     }
 
