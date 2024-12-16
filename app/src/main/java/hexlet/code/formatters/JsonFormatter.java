@@ -1,19 +1,18 @@
 package hexlet.code.formatters;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.DiffEntry;
 
 import java.util.List;
 
+// Форматтер для вывода в формате JSON
 public class JsonFormatter {
-
     public static String format(List<DiffEntry> diff) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(diff);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error while serializing diff to JSON", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при сериализации diff в JSON", e);
         }
     }
 }

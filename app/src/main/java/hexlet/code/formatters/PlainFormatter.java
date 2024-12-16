@@ -6,28 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// Форматтер для вывода в текстовом формате plain
 public class PlainFormatter {
-
     public static String format(List<DiffEntry> diff) {
         return diff.stream()
-                .map(entry -> {
-                    String key = entry.getKey();
-                    switch (entry.getStatus()) {
-                        case ADDED:
-                            return String.format(
-                                    "Property '%s' was added with value: %s",
-                                    key, formatValue(entry.getNewValue())
-                            );
-                        case REMOVED:
-                            return String.format("Property '%s' was removed", key);
-                        case CHANGED:
-                            return String.format(
-                                    "Property '%s' was updated. From %s to %s",
-                                    key, formatValue(entry.getOldValue()), formatValue(entry.getNewValue())
-                            );
-                        default:
-                            return null; // Пропускаем UNCHANGED
-                    }
+                .map(entry -> switch (entry.getStatus()) {
+                    case ADDED -> String.format("Свойство '%s' было добавлено со значением: %s",
+                            entry.getKey(), formatValue(entry.getNewValue()));
+                    case REMOVED -> String.format("Свойство '%s' было удалено", entry.getKey());
+                    case CHANGED -> String.format("Свойство '%s' было обновлено. С %s на %s",
+                            entry.getKey(), formatValue(entry.getOldValue()), formatValue(entry.getNewValue()));
+                    default -> null; // Пропускаем неизмененные свойства
                 })
                 .filter(line -> line != null)
                 .collect(Collectors.joining("\n"));
@@ -37,12 +26,9 @@ public class PlainFormatter {
         if (value == null) {
             return "null";
         }
-        if (value instanceof String) {
-            return "'" + value + "'";
-        }
-        if (value instanceof List || value instanceof Map) {
+        if (value instanceof Map || value instanceof List) {
             return "[complex value]";
         }
-        return value.toString();
+        return value instanceof String ? "'" + value + "'" : value.toString();
     }
 }

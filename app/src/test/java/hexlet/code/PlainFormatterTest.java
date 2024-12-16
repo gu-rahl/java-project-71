@@ -7,8 +7,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Тесты для форматтера Plain
 class PlainFormatterTest {
-
     @Test
     void testPlainFormat() {
         List<DiffEntry> diff = List.of(
@@ -19,10 +19,10 @@ class PlainFormatterTest {
         );
 
         String expected = """
-                Property 'chars2' was updated. From [complex value] to false
-                Property 'checked' was updated. From false to true
-                Property 'key1' was removed
-                Property 'key2' was added with value: 'value2'
+                Свойство 'chars2' было обновлено. С [complex value] на false
+                Свойство 'checked' было обновлено. С false на true
+                Свойство 'key1' было удалено
+                Свойство 'key2' было добавлено со значением: 'value2'
                 """.trim();
 
         assertEquals(expected, PlainFormatter.format(diff));

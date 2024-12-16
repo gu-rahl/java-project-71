@@ -1,7 +1,7 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.formatters.JsonFormatter;
 import org.junit.jupiter.api.Test;
 
@@ -9,8 +9,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Тесты для форматтера JSON
 class JsonFormatterTest {
-
     @Test
     void testJsonFormat() throws Exception {
         List<DiffEntry> diff = List.of(
@@ -21,8 +21,6 @@ class JsonFormatterTest {
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-
-        // Ожидаемый JSON в виде строки
         String expectedJson = """
                 [
                   {
@@ -52,11 +50,9 @@ class JsonFormatterTest {
                 ]
                 """.trim();
 
-        // Десериализация JSON в объекты для сравнения
         JsonNode expected = objectMapper.readTree(expectedJson);
         JsonNode actual = objectMapper.readTree(JsonFormatter.format(diff));
 
-        // Сравнение объектов JSON
-        assertEquals(expected, actual, "JSON output does not match the expected result");
+        assertEquals(expected, actual, "JSON вывод не совпадает с ожидаемым результатом");
     }
 }
